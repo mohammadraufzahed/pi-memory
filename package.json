@@ -1,0 +1,1 @@
+{"name":"pi-memory","version":"1.0.0","description":"Pi agent extension: structured long-term memory — store, recall, forget via the host journal.","keywords":["pi-package","memory","pi-extension"],"license":"MIT","repository":"mohammadraufzahed/pi-memory","pi":{"extensions":["./extensions/index.ts"]},"peerDependencies":{"@earendil-works/pi-coding-agent":"*","typebox":"*"}}
