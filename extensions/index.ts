@@ -25,13 +25,17 @@ import { homedir } from "node:os";
 import { randomUUID } from "node:crypto";
 import { Type } from "typebox";
 
-const DIR =
-	process.env.PI_TEAM_DIR ??
-	join(homedir(), ".local/state/telegram-agent/team");
+function teamDir(): string {
+	return (
+		process.env.PI_TEAM_DIR ??
+		join(homedir(), ".local/state/telegram-agent/team")
+	);
+}
 
 async function memoryOp(op: string, payload: string): Promise<string> {
-	const reqDir = join(DIR, "requests");
-	const repDir = join(DIR, "replies");
+	const dir = teamDir();
+	const reqDir = join(dir, "requests");
+	const repDir = join(dir, "replies");
 	mkdirSync(reqDir, { recursive: true });
 	mkdirSync(repDir, { recursive: true });
 	const id = randomUUID();
@@ -72,7 +76,7 @@ export default function piMemory(pi: ExtensionAPI) {
 		parameters: Type.Object({
 			note: Type.String({ description: "The fact to remember" }),
 		}),
-		async execute(_id, params) {
+		async execute(_id: string, params: { note: string }) {
 			const r = await memoryOp("store", params.note);
 			return { content: [{ type: "text" as const, text: r }] };
 		},
@@ -88,7 +92,7 @@ export default function piMemory(pi: ExtensionAPI) {
 			query: Type.Optional(Type.String()),
 			limit: Type.Optional(Type.Number()),
 		}),
-		async execute(_id, params) {
+		async execute(_id: string, params: { query?: string; limit?: number }) {
 			const r = await memoryOp(
 				"recall",
 				`${params.query ?? ""}|||${params.limit ?? 10}`,
@@ -105,7 +109,7 @@ export default function piMemory(pi: ExtensionAPI) {
 		parameters: Type.Object({
 			match: Type.String({ description: "substring to delete" }),
 		}),
-		async execute(_id, params) {
+		async execute(_id: string, params: { match: string }) {
 			const r = await memoryOp("forget", params.match);
 			return { content: [{ type: "text" as const, text: r }] };
 		},
