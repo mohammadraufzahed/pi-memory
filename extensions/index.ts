@@ -12,8 +12,10 @@
  * ~/.local/state/telegram-agent/team) — kind="memory" requests are
  * answered by the host, which owns the journal store.
  *
- *   text field carries:  op ||| payload
- *     store:<note> | recall:<query> | forget:<substr>
+ *   text field carries:  op|||payload
+ *     store|||<note>
+ *     recall|||<query>|||<limit>
+ *     forget|||<substr>
  *
  * Env: PI_TEAM_FROM = the calling soul (memories are per-soul).
  */
